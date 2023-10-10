@@ -67,7 +67,7 @@ public:
         // Anzeige der Spielerpositionen auf dem Bildschirm
         //Gosu::draw_text("Spieler 1: x = " + std::to_string(player1.x) + ", y = " + std::to_string(player1.y), 10, 10, 0xFFFFFFFF);
         //Gosu::draw_text("Spieler 2: x = " + std::to_string(player2.x) + ", y = " + std::to_string(player2.y), 10, 30, 0xFFFFFFFF);
-        Gosu::Font(24).draw_text("const std::string & text", 400, 300, 0,1,1);
+        Gosu::Font(24).draw_text("Geile Rampensau", 400, 300, 0,1,1);
 
         graphics().draw_line(
             player1.x, player1.y, Gosu::Color::RED,
