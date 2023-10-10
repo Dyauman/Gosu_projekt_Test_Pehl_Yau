@@ -71,11 +71,11 @@ public:
 
         graphics().draw_line(
             player1.x, player1.y, Gosu::Color::RED,
-            player1.x, player1.y - 100, Gosu::Color::GREEN,
+            player1.x, player1.y - 100, Gosu::Color::RED,
             0.0
         );
         graphics().draw_line(
-            player2.x, player2.y, Gosu::Color::RED,
+            player2.x, player2.y, Gosu::Color::GREEN,
             player2.x, player2.y - 100, Gosu::Color::GREEN,
             0.0
         );
