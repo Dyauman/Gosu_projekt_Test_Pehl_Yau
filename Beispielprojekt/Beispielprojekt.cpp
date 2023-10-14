@@ -75,7 +75,7 @@ public:
             player1.x, player1.y - 100, Gosu::Color::RED,
             0.0
         );
-        
+
         graphics().draw_line(
             player2.x, player2.y, Gosu::Color::GREEN,
             player2.x, player2.y - 100, Gosu::Color::GREEN,
@@ -83,76 +83,73 @@ public:
         );
         */
         //Strichmännchen 1
-        graphics().draw_line(player1.x, player1.y, Gosu::Color::GREEN,
-            player1.x, player1.y + 100, Gosu::Color::GREEN,
+        graphics().draw_line(player1.x + player1.direction, player1.y, Gosu::Color::GREEN,
+            player1.x + player1.direction, player1.y + 100, Gosu::Color::GREEN,
             0.0);  // Körper 400 300 400 400
-        graphics().draw_line(player1.x, player1.y + 50, Gosu::Color::GREEN,
-            player1.x + 30, player1.y - 20, Gosu::Color::GREEN,
+        graphics().draw_line(player1.x + player1.direction, player1.y + 50, Gosu::Color::GREEN,
+            player1.x + 30 + player1.direction, player1.y - 20, Gosu::Color::GREEN,
             0.0);  // rechter Arm 400 350 430 330
-        graphics().draw_line(player1.x, player1.y + 50, Gosu::Color::GREEN,
-            player1.x - 30, player1.y - 20, Gosu::Color::GREEN,
+        graphics().draw_line(player1.x + player1.direction, player1.y + 50, Gosu::Color::GREEN,
+            player1.x - 30 + player1.direction, player1.y - 20, Gosu::Color::GREEN,
             0.0);  // linker Arm 400 350 370 330
-        graphics().draw_line(player1.x, player1.y + 100, Gosu::Color::GREEN,
-            player1.x + 30, player1.y + 120, Gosu::Color::GREEN,
+        graphics().draw_line(player1.x + player1.direction, player1.y + 100, Gosu::Color::GREEN,
+            player1.x + 30 + player1.direction, player1.y + 120, Gosu::Color::GREEN,
             0.0);  // rechtes Bein 400 400 430 420
-        graphics().draw_line(player1.x, player1.y + 100, Gosu::Color::GREEN,
-            player1.x - 30, player1.y + 120, Gosu::Color::GREEN,
+        graphics().draw_line(player1.x + player1.direction, player1.y + 100, Gosu::Color::GREEN,
+            player1.x - 30 + player1.direction, player1.y + 120, Gosu::Color::GREEN,
             0.0);  // linkes Bein 400 400 370 420
 
         //Strichmännchen 2
         graphics().draw_line(player2.x, player2.y, Gosu::Color::WHITE,
             player2.x, player2.y + 100, Gosu::Color::WHITE,
-            0.0);  // Körper 400 300 400 400
+            0.0);  // Körper 
         graphics().draw_line(player2.x, player2.y + 50, Gosu::Color::WHITE,
             player2.x + 30, player2.y - 20, Gosu::Color::WHITE,
-            0.0);  // rechter Arm 400 350 430 330
+            0.0);  // rechter Arm
         graphics().draw_line(player2.x, player2.y + 50, Gosu::Color::WHITE,
             player2.x - 30, player2.y - 20, Gosu::Color::WHITE,
-            0.0);  // linker Arm 400 350 370 330
+            0.0);  // linker Arm 
         graphics().draw_line(player2.x, player2.y + 100, Gosu::Color::WHITE,
             player2.x + 30, player2.y + 120, Gosu::Color::WHITE,
-            0.0);  // rechtes Bein 400 400 430 420
+            0.0);  // rechtes Bein
         graphics().draw_line(player2.x, player2.y + 100, Gosu::Color::WHITE,
             player2.x - 30, player2.y + 120, Gosu::Color::WHITE,
-            0.0);  // linkes Bein 400 400 370 420
+            0.0);  // linkes Bein
     }
 
-
-};
-/*
     void update() override {
         // Steuerung für Spieler 1
         if (input().down(Gosu::KB_A)) {
-            player1.direction = -1; // Links
+            player1.direction = -3; // Links
         }
         else if (input().down(Gosu::KB_D)) {
-            player1.direction = 1; // Rechts
+            player1.direction = 3; // Rechts
         }
         else {
             player1.direction = 0; // Keine Bewegung
         }
-
         // Steuerung für Spieler 2
         if (input().down(Gosu::KB_LEFT)) {
-            player2.direction = -1; // Links
+            player2.direction = -3; // Links
         }
         else if (input().down(Gosu::KB_RIGHT)) {
-            player2.direction = 1; // Rechts
+            player2.direction = 3; // Rechts
         }
         else {
             player2.direction = 0; // Keine Bewegung
         }
-
+       
         // Bewegung der Spieler
         player1.move(2.0);
         player2.move(2.0);
+       
     }
-
-private:
-    Player player2(100, 300);
-    Player player2(100, 300);
+    /*
+    private:
+        Player player1(100, 300);
+       // Player player2(100, 300);
+    */
 };
-*/
 
 
 int main() {
