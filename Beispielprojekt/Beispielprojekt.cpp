@@ -52,6 +52,9 @@ public:
     }
 };
 
+
+
+
 class GameWindow : public Gosu::Window
 {
 public:
@@ -82,6 +85,7 @@ public:
             0.0
         );
         */
+
         //Strichmännchen 1
         graphics().draw_line(player1.x + player1.direction, player1.y, Gosu::Color::GREEN,
             player1.x + player1.direction, player1.y + 100, Gosu::Color::GREEN,
