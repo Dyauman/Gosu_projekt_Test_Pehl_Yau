@@ -42,18 +42,22 @@ class Player {
 public:
     double x, y;
     int direction; // 1 für rechts, -1 für links
-
     Player(double startX, double startY)
-        : x(startX), y(startY), direction(1) {
-    }
-
+        : x(startX), y(startY), direction(1)
+    {}
     void move(double speed) {
         x += speed * direction;
     }
 };
-
-
-
+class Sword {
+public:
+    int swordPosition;
+    bool wKeyPressed;
+    bool sKeyPressed;
+    Sword(int, bool, bool)
+        : swordPosition(), wKeyPressed(), sKeyPressed()
+    {}
+};
 
 class GameWindow : public Gosu::Window
 {
@@ -61,10 +65,12 @@ public:
     GameWindow()
         : Window(1280, 720) { // Größe des Fensters
         set_caption("Nidhogg Fake");
+         
     }
 
     Player player1 = Player(300, 300); // Startposition des ersten Spielers
     Player player2 = Player(700, 300); // Startposition des zweiten Spielers
+    Sword swordPlayer1 = Sword(0, false, false);
 
     void draw() override {
         // Anzeige der Spielerpositionen auf dem Bildschirm
@@ -92,11 +98,46 @@ public:
             player1.x + player1.direction, player1.y + 100, Gosu::Color::GREEN,
             0.0);  
 
-        // rechter Arm
-        graphics().draw_line(player1.x + player1.direction, player1.y + 50, Gosu::Color::GREEN,
-            player1.x + 30 + player1.direction, player1.y - 20, Gosu::Color::GREEN,
-            0.0);  
-
+        // Schwertarm 
+        if (swordPlayer1.swordPosition == 0) {
+            //Oben
+            graphics().draw_line(player1.x + player1.direction, player1.y + 50, Gosu::Color::GREEN,
+                player1.x + 30 + player1.direction, player1.y + 75, Gosu::Color::GREEN,
+                0.0);
+            //Schwert
+            graphics().draw_line(player1.x + 30 + player1.direction, player1.y + 75, Gosu::Color::BLUE,
+                player1.x + 70 + player1.direction, player1.y + 75, Gosu::Color::BLUE,
+                0.0);
+            graphics().draw_line(player1.x + 35 + player1.direction, player1.y + 85, Gosu::Color::BLUE,
+                player1.x + 35 + player1.direction, player1.y + 65, Gosu::Color::BLUE,
+                0.0);
+        }
+        else if (swordPlayer1.swordPosition == 2) {
+            //Mitte
+            graphics().draw_line(player1.x + player1.direction, player1.y + 50, Gosu::Color::GREEN,
+                player1.x + 30 + player1.direction, player1.y + 50, Gosu::Color::GREEN,
+                0.0);
+            //Schwert
+            graphics().draw_line(player1.x + 30 + player1.direction, player1.y + 50, Gosu::Color::BLUE,
+                player1.x + 70 + player1.direction, player1.y + 50, Gosu::Color::BLUE,
+                0.0);
+            graphics().draw_line(player1.x + 35 + player1.direction, player1.y + 60, Gosu::Color::BLUE,
+                player1.x + 35 + player1.direction, player1.y + 40, Gosu::Color::BLUE,
+                0.0);
+        }
+        else if (swordPlayer1.swordPosition == 1) {
+            //Unten
+            graphics().draw_line(player1.x + player1.direction, player1.y + 50, Gosu::Color::GREEN,
+                player1.x + 30 + player1.direction, player1.y + 25, Gosu::Color::GREEN,
+                0.0);
+            //Schwert
+            graphics().draw_line(player1.x + 30 + player1.direction, player1.y + 25, Gosu::Color::BLUE,
+                player1.x + 70 + player1.direction, player1.y + 25, Gosu::Color::BLUE,
+                0.0);
+            graphics().draw_line(player1.x + 35 + player1.direction, player1.y + 35, Gosu::Color::BLUE,
+                player1.x + 35 + player1.direction, player1.y + 15, Gosu::Color::BLUE,
+                0.0);
+        }
         // linker Arm 
         graphics().draw_line(player1.x + player1.direction, player1.y + 50, Gosu::Color::GREEN,
             player1.x - 30 + player1.direction, player1.y + 50, Gosu::Color::GREEN,
@@ -157,6 +198,7 @@ public:
         else {
             player1.direction = 0; // Keine Bewegung
         }
+
         // Steuerung für Spieler 2
         if (input().down(Gosu::KB_LEFT)) {
             player2.direction = -3; // Links
@@ -171,7 +213,28 @@ public:
         // Bewegung der Spieler
         player1.move(2.0);
         player2.move(2.0);
-       
+
+
+        if (input().down(Gosu::KB_W)) {
+            if (!swordPlayer1.wKeyPressed) {
+                swordPlayer1.swordPosition = (swordPlayer1.swordPosition - 1 + 3) % 3; // Armposition nach oben wechseln
+                swordPlayer1.wKeyPressed = true;
+            }
+        }
+        else {
+            swordPlayer1.wKeyPressed = false;
+        }
+
+        if (input().down(Gosu::KB_S)) {
+            if (!swordPlayer1.sKeyPressed) {
+                swordPlayer1.swordPosition = (swordPlayer1.swordPosition + 1) % 3; // Armposition nach unten wechseln
+                swordPlayer1.sKeyPressed = true;
+            }
+        }
+        else {
+            swordPlayer1.sKeyPressed = false;
+        }
+        
     }
     /*
     private:
