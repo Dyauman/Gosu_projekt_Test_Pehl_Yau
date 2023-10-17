@@ -87,35 +87,60 @@ public:
         */
 
         //Strichmännchen 1
+        // Körper
         graphics().draw_line(player1.x + player1.direction, player1.y, Gosu::Color::GREEN,
             player1.x + player1.direction, player1.y + 100, Gosu::Color::GREEN,
-            0.0);  // Körper 400 300 400 400
+            0.0);  
+
+        // rechter Arm
         graphics().draw_line(player1.x + player1.direction, player1.y + 50, Gosu::Color::GREEN,
             player1.x + 30 + player1.direction, player1.y - 20, Gosu::Color::GREEN,
-            0.0);  // rechter Arm 400 350 430 330
+            0.0);  
+
+        // linker Arm 
         graphics().draw_line(player1.x + player1.direction, player1.y + 50, Gosu::Color::GREEN,
-            player1.x - 30 + player1.direction, player1.y - 20, Gosu::Color::GREEN,
-            0.0);  // linker Arm 400 350 370 330
+            player1.x - 30 + player1.direction, player1.y + 50, Gosu::Color::GREEN,
+            0.0);  
+        graphics().draw_line(player1.x -30 + player1.direction, player1.y + 50, Gosu::Color::GREEN,
+            player1.x + player1.direction, player1.y + 80, Gosu::Color::GREEN,
+            0.0);
+
+        // rechtes Bein
         graphics().draw_line(player1.x + player1.direction, player1.y + 100, Gosu::Color::GREEN,
             player1.x + 30 + player1.direction, player1.y + 120, Gosu::Color::GREEN,
-            0.0);  // rechtes Bein 400 400 430 420
+            0.0);  
+
+        // linkes Bein
         graphics().draw_line(player1.x + player1.direction, player1.y + 100, Gosu::Color::GREEN,
             player1.x - 30 + player1.direction, player1.y + 120, Gosu::Color::GREEN,
-            0.0);  // linkes Bein 400 400 370 420
+            0.0);  
+
 
         //Strichmännchen 2
+        // Körper 
         graphics().draw_line(player2.x, player2.y, Gosu::Color::WHITE,
             player2.x, player2.y + 100, Gosu::Color::WHITE,
-            0.0);  // Körper 
+            0.0);  
+
+        // rechter Arm
         graphics().draw_line(player2.x, player2.y + 50, Gosu::Color::WHITE,
-            player2.x + 30, player2.y - 20, Gosu::Color::WHITE,
-            0.0);  // rechter Arm
+            player2.x + 30, player2.y + 50, Gosu::Color::WHITE,
+            0.0);  
+        graphics().draw_line(player2.x + 30, player2.y + 50, Gosu::Color::WHITE,
+            player2.x, player2.y +80, Gosu::Color::WHITE,
+            0.0);
+
+        // linker Arm 
         graphics().draw_line(player2.x, player2.y + 50, Gosu::Color::WHITE,
             player2.x - 30, player2.y - 20, Gosu::Color::WHITE,
-            0.0);  // linker Arm 
+            0.0);  
+
+        // rechtes Bein
         graphics().draw_line(player2.x, player2.y + 100, Gosu::Color::WHITE,
             player2.x + 30, player2.y + 120, Gosu::Color::WHITE,
-            0.0);  // rechtes Bein
+            0.0); 
+
+        // linkes Bein
         graphics().draw_line(player2.x, player2.y + 100, Gosu::Color::WHITE,
             player2.x - 30, player2.y + 120, Gosu::Color::WHITE,
             0.0);  // linkes Bein
