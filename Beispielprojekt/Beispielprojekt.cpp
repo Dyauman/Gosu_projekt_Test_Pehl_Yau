@@ -1,6 +1,7 @@
 #include <Gosu/Gosu.hpp>
 #include <Gosu/AutoLink.hpp>
 #include <cmath>
+#include<iostream>
 /*
 class GameWindow : public Gosu::Window
 {
@@ -41,22 +42,27 @@ int main()
 
 class Player {
 public:
-    double x, y;
-    int direction; // 1 für rechts, -1 für links
+    double x, y;      
+    double direction; // 1 für rechts, -1 für links
     bool leftKeyPressed;
     bool rightKeyPressed;
+    int keyHold_l;      //Variable fuer kontinuierliche Bewegung
+    int keyHold_r;
+
     Player(double startX, double startY, bool left, bool right)
-        : x(startX), y(startY), leftKeyPressed(left), rightKeyPressed(right), direction(1)
+        : x(startX), y(startY), leftKeyPressed(left), rightKeyPressed(right), keyHold_r(0), keyHold_l(0), direction(1)
     {}
-    void move(double speed) {
-        x += speed * direction;
+    void move(double direction) {
+        this->x = this->x + direction;
     }
 };
+
 class Sword {
 public:
     int swordPosition;
     bool upKeyPressed;
     bool downKeyPressed;
+    
     Sword(int, bool, bool)
         : swordPosition(), upKeyPressed(), downKeyPressed()
     {}
@@ -74,14 +80,18 @@ public:
 
     Player player1 = Player(300, 300, false, false); // Startposition des ersten Spielers
     Player player2 = Player(700, 300, false, false); // Startposition des zweiten Spielers
-    Sword swordPlayer1 = Sword(0, false, false);
-    Sword swordPlayer2 = Sword(0, false, false);
+    Sword swordPlayer1 = Sword(0, false, false);     //Schwertposition des ersten Spielers
+    Sword swordPlayer2 = Sword(0, false, false);    //Schwertposition des zweiten Spielers
+
+    int steps = 20;                                 //Dynamische Variable fuer die Schrittweite
+    int steps_divider = 5;                          //Dynamische Variable fuer mehrere Schritte
 
     void draw() override {
         // Anzeige der Spielerpositionen auf dem Bildschirm
         //Gosu::draw_text("Spieler 1: x = " + std::to_string(player1.x) + ", y = " + std::to_string(player1.y), 10, 10, 0xFFFFFFFF);
         //Gosu::draw_text("Spieler 2: x = " + std::to_string(player2.x) + ", y = " + std::to_string(player2.y), 10, 30, 0xFFFFFFFF);
         Gosu::Font(24).draw_text("Nidhogg Fake", 400, 300, 0, 1, 1);
+        
         /*
         graphics().draw_line(
             player1.x, player1.y, Gosu::Color::RED,
@@ -235,7 +245,8 @@ public:
             player2.x - 30, player2.y + 120, Gosu::Color::WHITE,
             0.0);  // linkes Bein
     }
-    void drawCircle(int x, int y, int radius, Gosu::Color color)
+
+    void drawCircle(double x, double y, double radius, Gosu::Color color)
     {
         for (int i = 0; i <= 360; i++)
         {
@@ -248,41 +259,129 @@ public:
             graphics().draw_line(x1, y2, color, x2, y2, color, 0.0);
         }
     }
+
     void update() override {
         // Steuerung für Spieler 1
+
+        //Alter Code
+        /* 
         if (input().down(Gosu::KB_A))
         {
-                player1.direction = -3; // Links
+            if (!player1.leftKeyPressed && !input().down(Gosu::KB_A))
+            {
+                //player1.direction = -3; // Links
+                player1.move(-3);
+                player1.leftKeyPressed = true;
+            }
+            else if (player1.leftKeyPressed && !input().down(Gosu::KB_A))
+            {
+                player1.leftKeyPressed = false;
+            }
         }
         
         else if (input().down(Gosu::KB_D))
         {
-                player1.direction = 3; // Rechts
+            if (!player1.rightKeyPressed)
+            {
+                //player1.direction = -3; // Links
+                player1.move(3);
+                player1.rightKeyPressed = true;
+            }
+            else
+            {
+                player1.rightKeyPressed = false;
+            }
         }
         else 
         {
             player1.direction = 0; // Keine Bewegung
         }
-       
+       */
         
+        if (input().down(Gosu::KB_A)) {
+            //Einzelne Bewegung
+            if (!player1.leftKeyPressed) {
+                player1.leftKeyPressed = true;
+                player1.move(-steps);
+            }
+            //Kontinuierliche Bewegung
+            player1.keyHold_l = player1.keyHold_l + 1;
+            
+            if (player1.keyHold_l >= 30)
+            {
+                player1.move(-steps/steps_divider);
+            }
+        }
+        else
+        {
+            player1.leftKeyPressed = false;
+            player1.keyHold_l = 0;
+        }
+
+        if (input().down(Gosu::KB_D)) {
+            //Einzelne Bewegung
+            if (!player1.rightKeyPressed) {
+                player1.rightKeyPressed = true;
+                player1.move(steps);
+            }
+            //Kontinuierliche Bewegung
+            player1.keyHold_r = player1.keyHold_r + 1;
+
+            if (player1.keyHold_r >= 30)
+            {
+                player1.move(steps / steps_divider);
+            }
+        }
+        else
+        {
+            player1.rightKeyPressed = false;
+            player1.keyHold_r = 0;
+        }
 
         // Steuerung für Spieler 2
-       if (input().down(Gosu::KB_LEFT))
-       {
-               player2.direction = -3; // Links
-       }
-       else if (input().down(Gosu::KB_RIGHT))
-       {
-           player2.direction = 3; // Rechts
+
+       if (input().down(Gosu::KB_LEFT)) {
+           //Einzelne Bewegung 
+           if (!player2.leftKeyPressed) {
+                player2.leftKeyPressed = true;
+                player2.move(-steps);
+            }
+           
+           //Kontinuierliche Bewegung
+            player2.keyHold_l = player2.keyHold_l + 1;
+
+            if (player2.keyHold_l >= 30)
+            {
+                player2.move(-steps / steps_divider);
+            }
+        }
+        else
+        {
+            player2.leftKeyPressed = false;
+            player2.keyHold_l = 0;
+        }
+
+       if (input().down(Gosu::KB_RIGHT)) {
+           //Einzelne Bewegung
+           if (!player2.rightKeyPressed) {
+               player2.rightKeyPressed = true;
+               player2.move(steps);
+           }
+
+           //Kontinuierliche Bewegung
+           player2.keyHold_r = player2.keyHold_r + 1;
+
+           if (player2.keyHold_r >= 30)
+           {
+               player2.move(steps / steps_divider);
+           }
        }
        else
        {
-            player2.direction = 0; // Keine Bewegung
+           player2.rightKeyPressed = false;
+           player2.keyHold_r = 0;
        }
-       
-        // Bewegung der Spieler
-        player1.move(2.0);
-        player2.move(2.0);
+
 
         // Bewegung Arm Player 1
         if (input().down(Gosu::KB_W)) {
