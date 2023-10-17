@@ -1,5 +1,6 @@
 #include <Gosu/Gosu.hpp>
 #include <Gosu/AutoLink.hpp>
+#include <cmath>
 /*
 class GameWindow : public Gosu::Window
 {
@@ -42,8 +43,10 @@ class Player {
 public:
     double x, y;
     int direction; // 1 für rechts, -1 für links
-    Player(double startX, double startY)
-        : x(startX), y(startY), direction(1)
+    bool leftKeyPressed;
+    bool rightKeyPressed;
+    Player(double startX, double startY, bool left, bool right)
+        : x(startX), y(startY), leftKeyPressed(left), rightKeyPressed(right), direction(1)
     {}
     void move(double speed) {
         x += speed * direction;
@@ -59,6 +62,7 @@ public:
     {}
 };
 
+
 class GameWindow : public Gosu::Window
 {
 public:
@@ -68,8 +72,8 @@ public:
          
     }
 
-    Player player1 = Player(300, 300); // Startposition des ersten Spielers
-    Player player2 = Player(700, 300); // Startposition des zweiten Spielers
+    Player player1 = Player(300, 300, false, false); // Startposition des ersten Spielers
+    Player player2 = Player(700, 300, false, false); // Startposition des zweiten Spielers
     Sword swordPlayer1 = Sword(0, false, false);
     Sword swordPlayer2 = Sword(0, false, false);
 
@@ -77,7 +81,6 @@ public:
         // Anzeige der Spielerpositionen auf dem Bildschirm
         //Gosu::draw_text("Spieler 1: x = " + std::to_string(player1.x) + ", y = " + std::to_string(player1.y), 10, 10, 0xFFFFFFFF);
         //Gosu::draw_text("Spieler 2: x = " + std::to_string(player2.x) + ", y = " + std::to_string(player2.y), 10, 30, 0xFFFFFFFF);
-
         Gosu::Font(24).draw_text("Nidhogg Fake", 400, 300, 0, 1, 1);
         /*
         graphics().draw_line(
@@ -94,8 +97,12 @@ public:
         */
 
         //Strichmännchen 1
+        // Kopf
+    
+        drawCircle(player1.x, player1.y , 25, Gosu::Color::GREEN);
+
         // Körper
-        graphics().draw_line(player1.x + player1.direction, player1.y, Gosu::Color::GREEN,
+        graphics().draw_line(player1.x + player1.direction, player1.y +25, Gosu::Color::GREEN,
             player1.x + player1.direction, player1.y + 100, Gosu::Color::GREEN,
             0.0);  
 
@@ -159,8 +166,13 @@ public:
 
 
         //Strichmännchen 2
+        // Kopf
+        
+        drawCircle(player2.x, player2.y, 25, Gosu::Color::WHITE);
+
+
         // Körper 
-        graphics().draw_line(player2.x, player2.y, Gosu::Color::WHITE,
+        graphics().draw_line(player2.x, player2.y +25, Gosu::Color::WHITE,
             player2.x, player2.y + 100, Gosu::Color::WHITE,
             0.0);  
 
@@ -223,35 +235,56 @@ public:
             player2.x - 30, player2.y + 120, Gosu::Color::WHITE,
             0.0);  // linkes Bein
     }
+    void drawCircle(int x, int y, int radius, Gosu::Color color)
+    {
+        for (int i = 0; i <= 360; i++)
+        {
+            double angle = i * M_PI / 180.0;
+            double x1 = x + radius * cos(angle);
+            double y1 = y + radius * sin(angle);
+            double x2 = x + radius * cos(angle + M_PI / 180.0);
+            double y2 = y + radius * sin(angle + M_PI / 180.0);
 
+            graphics().draw_line(x1, y2, color, x2, y2, color, 0.0);
+        }
+    }
     void update() override {
         // Steuerung für Spieler 1
-        if (input().down(Gosu::KB_A)) {
-            player1.direction = -3; // Links
+        if (input().down(Gosu::KB_A))
+        {
+                player1.direction = -3; // Links
         }
-        else if (input().down(Gosu::KB_D)) {
-            player1.direction = 3; // Rechts
+        
+        else if (input().down(Gosu::KB_D))
+        {
+                player1.direction = 3; // Rechts
         }
-        else {
+        else 
+        {
             player1.direction = 0; // Keine Bewegung
         }
+       
+        
 
         // Steuerung für Spieler 2
-        if (input().down(Gosu::KB_LEFT)) {
-            player2.direction = -3; // Links
-        }
-        else if (input().down(Gosu::KB_RIGHT)) {
-            player2.direction = 3; // Rechts
-        }
-        else {
+       if (input().down(Gosu::KB_LEFT))
+       {
+               player2.direction = -3; // Links
+       }
+       else if (input().down(Gosu::KB_RIGHT))
+       {
+           player2.direction = 3; // Rechts
+       }
+       else
+       {
             player2.direction = 0; // Keine Bewegung
-        }
+       }
        
         // Bewegung der Spieler
         player1.move(2.0);
         player2.move(2.0);
 
-
+        // Bewegung Arm Player 1
         if (input().down(Gosu::KB_W)) {
             if (!swordPlayer1.upKeyPressed) {
                 swordPlayer1.swordPosition = (swordPlayer1.swordPosition - 1 + 3) % 3; // Armposition nach oben wechseln
@@ -272,7 +305,7 @@ public:
             swordPlayer1.downKeyPressed = false;
         }
 
-
+        // Bewegung Arm Player 2
         if (input().down(Gosu::KB_UP)) {
             if (!swordPlayer2.upKeyPressed) {
                 swordPlayer2.swordPosition = (swordPlayer2.swordPosition - 1 + 3) % 3; // Armposition nach oben wechseln
