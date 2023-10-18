@@ -73,13 +73,13 @@ class GameWindow : public Gosu::Window
 {
 public:
     GameWindow()
-        : Window(1280, 720) { // Größe des Fensters
+        : Window(1920, 1080) { // Größe des Fensters
         set_caption("Nidhogg Fake");
          
     }
 
-    Player player1 = Player(300, 300, false, false); // Startposition des ersten Spielers
-    Player player2 = Player(700, 300, false, false); // Startposition des zweiten Spielers
+    Player player1 = Player(300, 540, false, false); // Startposition des ersten Spielers
+    Player player2 = Player(1620, 540, false, false); // Startposition des zweiten Spielers
     Sword swordPlayer1 = Sword(0, false, false);     //Schwertposition des ersten Spielers
     Sword swordPlayer2 = Sword(0, false, false);    //Schwertposition des zweiten Spielers
 
@@ -90,7 +90,7 @@ public:
         // Anzeige der Spielerpositionen auf dem Bildschirm
         //Gosu::draw_text("Spieler 1: x = " + std::to_string(player1.x) + ", y = " + std::to_string(player1.y), 10, 10, 0xFFFFFFFF);
         //Gosu::draw_text("Spieler 2: x = " + std::to_string(player2.x) + ", y = " + std::to_string(player2.y), 10, 30, 0xFFFFFFFF);
-        Gosu::Font(24).draw_text("Nidhogg Fake", 400, 300, 0, 1, 1);
+        Gosu::Font(24).draw_text("Nidhogg Fake", 860, 300, 0, 1, 1);
         
         /*
         graphics().draw_line(
