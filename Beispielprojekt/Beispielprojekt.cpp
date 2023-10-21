@@ -62,9 +62,10 @@ public:
     int swordPosition;
     bool upKeyPressed;
     bool downKeyPressed;
+    bool extendingSword;
     
-    Sword(int, bool, bool)
-        : swordPosition(), upKeyPressed(), downKeyPressed()
+    Sword(int, bool, bool, bool)
+        : swordPosition(), upKeyPressed(), downKeyPressed(), extendingSword()
     {}
 };
 
@@ -80,8 +81,8 @@ public:
 
     Player player1 = Player(300, 540, false, false); // Startposition des ersten Spielers
     Player player2 = Player(1620, 540, false, false); // Startposition des zweiten Spielers
-    Sword swordPlayer1 = Sword(0, false, false);     //Schwertposition des ersten Spielers
-    Sword swordPlayer2 = Sword(0, false, false);    //Schwertposition des zweiten Spielers
+    Sword swordPlayer1 = Sword(0, false, false, false);     //Schwertposition des ersten Spielers
+    Sword swordPlayer2 = Sword(0, false, false, false);    //Schwertposition des zweiten Spielers
 
     int steps = 50;                                 //Dynamische Variable fuer die Schrittweite
     int steps_divider = 5;                          //Dynamische Variable fuer mehrere Schritte
@@ -106,72 +107,145 @@ public:
         );
         */
 
-        //Strichmännchen 1
+        //Strichmännchen 1 Stichposition
         // Kopf
-    
-        drawCircle(player1.x, player1.y , 25, Gosu::Color::GREEN);
+       if (swordPlayer1.extendingSword == true)
+       {
+            drawCircle(player1.x, player1.y, 25, Gosu::Color::GREEN);
 
-        // Körper
-        graphics().draw_line(player1.x, player1.y + 25, Gosu::Color::GREEN,
-            player1.x, player1.y + 100, Gosu::Color::GREEN,
-            0.0);
-        // Schwertarm 
-        if (swordPlayer1.swordPosition == 2) {
-            //Oben
-            graphics().draw_line(player1.x , player1.y + 50, Gosu::Color::GREEN,
-                player1.x + 30  , player1.y + 75, Gosu::Color::GREEN,
+            // Körper
+            graphics().draw_line(player1.x, player1.y + 25, Gosu::Color::GREEN,
+                player1.x -20, player1.y + 100, Gosu::Color::GREEN,
                 0.0);
-            //Schwert
-            graphics().draw_line(player1.x + 30  , player1.y + 75, Gosu::Color::BLUE,
-                player1.x + 70  , player1.y + 75, Gosu::Color::BLUE,
+            // Schwertarm
+            if (swordPlayer1.swordPosition == 2) {
+                //Oben
+                graphics().draw_line(player1.x -10, player1.y + 50, Gosu::Color::GREEN,
+                    player1.x + 40, player1.y + 75, Gosu::Color::GREEN,
+                    0.0);
+                //Schwert
+                graphics().draw_line(player1.x + 40, player1.y + 75, Gosu::Color::BLUE,
+                    player1.x + 80, player1.y + 75, Gosu::Color::BLUE,
+                    0.0);
+                graphics().draw_line(player1.x + 45, player1.y + 85, Gosu::Color::BLUE,
+                    player1.x + 45, player1.y + 65, Gosu::Color::BLUE,
+                    0.0);
+            }
+            else if (swordPlayer1.swordPosition == 1) {
+                //Mitte
+                graphics().draw_line(player1.x-10, player1.y + 50, Gosu::Color::GREEN,
+                    player1.x + 40, player1.y + 50, Gosu::Color::GREEN,
+                    0.0);
+                //Schwert
+                graphics().draw_line(player1.x + 40, player1.y + 50, Gosu::Color::BLUE,
+                    player1.x + 80, player1.y + 50, Gosu::Color::BLUE,
+                    0.0);
+                graphics().draw_line(player1.x + 45, player1.y + 60, Gosu::Color::BLUE,
+                    player1.x + 45, player1.y + 40, Gosu::Color::BLUE,
+                    0.0);
+            }
+            else if (swordPlayer1.swordPosition == 0) {
+                //Unten
+                graphics().draw_line(player1.x -10, player1.y + 50, Gosu::Color::GREEN,
+                    player1.x + 40, player1.y + 25, Gosu::Color::GREEN,
+                    0.0);
+                //Schwert
+                graphics().draw_line(player1.x + 40, player1.y + 25, Gosu::Color::BLUE,
+                    player1.x + 80, player1.y + 25, Gosu::Color::BLUE,
+                    0.0);
+                graphics().draw_line(player1.x + 45, player1.y + 35, Gosu::Color::BLUE,
+                    player1.x + 45, player1.y + 15, Gosu::Color::BLUE,
+                    0.0);
+            }
+            // linker Arm 
+            graphics().draw_line(player1.x -10 , player1.y + 50, Gosu::Color::GREEN,
+                player1.x - 30, player1.y + 50, Gosu::Color::GREEN,
                 0.0);
-            graphics().draw_line(player1.x + 35  , player1.y + 85, Gosu::Color::BLUE,
-                player1.x + 35  , player1.y + 65, Gosu::Color::BLUE,
+            graphics().draw_line(player1.x - 30, player1.y + 50, Gosu::Color::GREEN,
+                player1.x - 60, player1.y + 30, Gosu::Color::GREEN,
+                0.0);
+
+            // rechtes Bein
+            graphics().draw_line(player1.x - 20, player1.y + 100, Gosu::Color::GREEN,
+                player1.x + 20, player1.y + 100, Gosu::Color::GREEN,
+                0.0);
+            graphics().draw_line(player1.x +20, player1.y + 100, Gosu::Color::GREEN,
+                player1.x + 20, player1.y + 120, Gosu::Color::GREEN,
+                0.0);
+
+
+            // linkes Bein
+            graphics().draw_line(player1.x -20, player1.y + 100, Gosu::Color::GREEN,
+                player1.x - 50, player1.y + 120, Gosu::Color::GREEN,
                 0.0);
         }
-        else if (swordPlayer1.swordPosition == 1) {
-            //Mitte
-            graphics().draw_line(player1.x  , player1.y + 50, Gosu::Color::GREEN,
-                player1.x + 30  , player1.y + 50, Gosu::Color::GREEN,
+        else
+        {
+            drawCircle(player1.x, player1.y, 25, Gosu::Color::GREEN);
+
+            // Körper
+            graphics().draw_line(player1.x, player1.y + 25, Gosu::Color::GREEN,
+                player1.x, player1.y + 100, Gosu::Color::GREEN,
                 0.0);
-            //Schwert
-            graphics().draw_line(player1.x + 30  , player1.y + 50, Gosu::Color::BLUE,
-                player1.x + 70  , player1.y + 50, Gosu::Color::BLUE,
+            // Schwertarm
+            if (swordPlayer1.swordPosition == 2) {
+                //Oben
+                graphics().draw_line(player1.x, player1.y + 50, Gosu::Color::GREEN,
+                    player1.x + 15, player1.y + 75, Gosu::Color::GREEN,
+                    0.0);
+                //Schwert
+                graphics().draw_line(player1.x + 15, player1.y + 75, Gosu::Color::BLUE,
+                    player1.x + 55, player1.y + 75, Gosu::Color::BLUE,
+                    0.0);
+                graphics().draw_line(player1.x + 20, player1.y + 85, Gosu::Color::BLUE,
+                    player1.x + 20, player1.y + 65, Gosu::Color::BLUE,
+                    0.0);
+            }
+            else if (swordPlayer1.swordPosition == 1) {
+                //Mitte
+                graphics().draw_line(player1.x, player1.y + 50, Gosu::Color::GREEN,
+                    player1.x + 15, player1.y + 50, Gosu::Color::GREEN,
+                    0.0);
+                //Schwert
+                graphics().draw_line(player1.x + 15, player1.y + 50, Gosu::Color::BLUE,
+                    player1.x + 55, player1.y + 50, Gosu::Color::BLUE,
+                    0.0);
+                graphics().draw_line(player1.x + 20, player1.y + 60, Gosu::Color::BLUE,
+                    player1.x + 20, player1.y + 40, Gosu::Color::BLUE,
+                    0.0);
+            }
+            else if (swordPlayer1.swordPosition == 0) {
+                //Unten
+                graphics().draw_line(player1.x, player1.y + 50, Gosu::Color::GREEN,
+                    player1.x + 15, player1.y + 25, Gosu::Color::GREEN,
+                    0.0);
+                //Schwert
+                graphics().draw_line(player1.x + 15, player1.y + 25, Gosu::Color::BLUE,
+                    player1.x + 55, player1.y + 25, Gosu::Color::BLUE,
+                    0.0);
+                graphics().draw_line(player1.x + 20, player1.y + 35, Gosu::Color::BLUE,
+                    player1.x + 20, player1.y + 15, Gosu::Color::BLUE,
+                    0.0);
+            }
+            // linker Arm 
+            graphics().draw_line(player1.x, player1.y + 50, Gosu::Color::GREEN,
+                player1.x - 30, player1.y + 50, Gosu::Color::GREEN,
                 0.0);
-            graphics().draw_line(player1.x + 35  , player1.y + 60, Gosu::Color::BLUE,
-                player1.x + 35  , player1.y + 40, Gosu::Color::BLUE,
+            graphics().draw_line(player1.x - 30, player1.y + 50, Gosu::Color::GREEN,
+                player1.x, player1.y + 80, Gosu::Color::GREEN,
+                0.0);
+
+            // rechtes Bein
+            graphics().draw_line(player1.x, player1.y + 100, Gosu::Color::GREEN,
+                player1.x + 30, player1.y + 120, Gosu::Color::GREEN,
+                0.0);
+
+            // linkes Bein
+            graphics().draw_line(player1.x, player1.y + 100, Gosu::Color::GREEN,
+                player1.x - 30, player1.y + 120, Gosu::Color::GREEN,
                 0.0);
         }
-        else if (swordPlayer1.swordPosition == 0) {
-            //Unten
-            graphics().draw_line(player1.x  , player1.y + 50, Gosu::Color::GREEN,
-                player1.x + 30  , player1.y + 25, Gosu::Color::GREEN,
-                0.0);
-            //Schwert
-            graphics().draw_line(player1.x + 30  , player1.y + 25, Gosu::Color::BLUE,
-                player1.x + 70  , player1.y + 25, Gosu::Color::BLUE,
-                0.0);
-            graphics().draw_line(player1.x + 35  , player1.y + 35, Gosu::Color::BLUE,
-                player1.x + 35  , player1.y + 15, Gosu::Color::BLUE,
-                0.0);
-        }
-        // linker Arm 
-        graphics().draw_line(player1.x  , player1.y + 50, Gosu::Color::GREEN,
-            player1.x - 30  , player1.y + 50, Gosu::Color::GREEN,
-            0.0);  
-        graphics().draw_line(player1.x -30  , player1.y + 50, Gosu::Color::GREEN,
-            player1.x  , player1.y + 80, Gosu::Color::GREEN,
-            0.0);
-
-        // rechtes Bein
-        graphics().draw_line(player1.x  , player1.y + 100, Gosu::Color::GREEN,
-            player1.x + 30  , player1.y + 120, Gosu::Color::GREEN,
-            0.0);  
-
-        // linkes Bein
-        graphics().draw_line(player1.x  , player1.y + 100, Gosu::Color::GREEN,
-            player1.x - 30  , player1.y + 120, Gosu::Color::GREEN,
-            0.0);  
+        
 
 
         //Strichmännchen 2
@@ -423,7 +497,17 @@ public:
         else {
             swordPlayer2.downKeyPressed = false;
         }
-        
+
+        // Player 1 Stich- & Ruheposition
+        if (input().down(Gosu::KB_SPACE)) {
+            if (!swordPlayer1.extendingSword) {
+                swordPlayer1.extendingSword = true;
+            }
+        }
+        else {
+            swordPlayer1.extendingSword = false;
+        }
+
     }
     /*
     private:
