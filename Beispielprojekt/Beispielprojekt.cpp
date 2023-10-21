@@ -2,43 +2,6 @@
 #include <Gosu/AutoLink.hpp>
 #include <cmath>
 #include<iostream>
-/*
-class GameWindow : public Gosu::Window
-{
-public:
-
-	GameWindow()
-		: Window(800, 600)
-	{
-		set_caption("Gosu Tutorial mit Git");
-	}
-
-	// Wird bis zu 60x pro Sekunde aufgerufen.
-	// Wenn die Grafikkarte oder der Prozessor nicht mehr hinterherkommen,
-	// dann werden `draw` Aufrufe ausgelassen und die Framerate sinkt
-	void draw() override
-	{
-		graphics().draw_line(
-			10, 20, Gosu::Color::RED,
-			200, 100, Gosu::Color::GREEN,
-			0.0
-		);
-	}
-
-	// Wird 60x pro Sekunde aufgerufen
-	void update() override
-	{
-	}
-};
-
-// C++ Hauptprogramm
-int main()
-{
-	GameWindow window;
-	window.show();
-}
-*/
-
 
 class Player {
 public:
@@ -88,24 +51,7 @@ public:
     int steps_divider = 5;                          //Dynamische Variable fuer mehrere Schritte
 
     void draw() override {
-        // Anzeige der Spielerpositionen auf dem Bildschirm
-        //Gosu::draw_text("Spieler 1: x = " + std::to_string(player1.x) + ", y = " + std::to_string(player1.y), 10, 10, 0xFFFFFFFF);
-        //Gosu::draw_text("Spieler 2: x = " + std::to_string(player2.x) + ", y = " + std::to_string(player2.y), 10, 30, 0xFFFFFFFF);
         Gosu::Font(24).draw_text("Nidhogg Fake", 860, 300, 0, 1, 1);
-        
-        /*
-        graphics().draw_line(
-            player1.x, player1.y, Gosu::Color::RED,
-            player1.x, player1.y - 100, Gosu::Color::RED,
-            0.0
-        );
-
-        graphics().draw_line(
-            player2.x, player2.y, Gosu::Color::GREEN,
-            player2.x, player2.y - 100, Gosu::Color::GREEN,
-            0.0
-        );
-        */
 
         //Player 1 Angriffsposition
         // Kopf
@@ -414,42 +360,6 @@ public:
     }
 
     void update() override {
-        // Steuerung für Spieler 1
-
-        //Alter Code
-        /* 
-        if (input().down(Gosu::KB_A))
-        {
-            if (!player1.leftKeyPressed && !input().down(Gosu::KB_A))
-            {
-                //player1.direction = -3; // Links
-                player1.move(-3);
-                player1.leftKeyPressed = true;
-            }
-            else if (player1.leftKeyPressed && !input().down(Gosu::KB_A))
-            {
-                player1.leftKeyPressed = false;
-            }
-        }
-        
-        else if (input().down(Gosu::KB_D))
-        {
-            if (!player1.rightKeyPressed)
-            {
-                //player1.direction = -3; // Links
-                player1.move(3);
-                player1.rightKeyPressed = true;
-            }
-            else
-            {
-                player1.rightKeyPressed = false;
-            }
-        }
-        else 
-        {
-            player1.direction = 0; // Keine Bewegung
-        }
-       */
         
         if (input().down(Gosu::KB_A)) {
             //Einzelne Bewegung
@@ -598,11 +508,6 @@ public:
             swordPlayer2.extendingSword = false;
         }
     }
-    /*
-    private:
-        Player player1(100, 300);
-       // Player player2(100, 300);
-    */
 };
 
 
