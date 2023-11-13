@@ -2,6 +2,7 @@
 #include <Gosu/AutoLink.hpp>
 #include <cmath>
 #include<iostream>
+#include<string>
 
 //Eigene Klasse fuer Koordinaten
 class Coordinates {
@@ -21,6 +22,8 @@ public:
     {
         return hitmarker_x;
     }
+
+    
 };
 
 //Alter code teil fuer Player, kann entfernt werden wenn es nicht mehr benoetigt wird
@@ -55,10 +58,11 @@ public:
     bool rightKeyPressed;
     int keyHold_r;      //Variable fuer kontinuierliche Bewegung
     int keyHold_l;
+    int lifePoints;
     
 
     Player(double startX, double startY, double hitX, double hitY, bool left, bool right)
-        : Coordinates(startX,startY,hitX, hitY), leftKeyPressed(left), rightKeyPressed(right), keyHold_r(0), keyHold_l(0), direction(1)
+        : Coordinates(startX,startY,hitX, hitY), leftKeyPressed(left), rightKeyPressed(right), keyHold_r(0), keyHold_l(0), direction(1), lifePoints(3)
     {}
 
     void move(double direction) {
@@ -66,14 +70,52 @@ public:
         this->hitmarker_x = this->hitmarker_x + direction;
     }
 
-    //Methode fuer Angriff, falls Schwertposition groesser ist als gegnerischer Player => Hit
-    void hit(double swordPos, double hitmarkerPos)
+    //Methode falls ein Treffer gelandet wurde
+    void startPos(Player& p1, Player& p2)
     {
-        
-        if (swordPos >= hitmarkerPos)
+        p1.x = 300;
+        p1.hitmarker_x = 300;
+
+        p2.x = 1620;
+        p2.hitmarker_x = 1620;
+
+    }
+
+    //Methode fuer Angriff, falls Schwertposition groesser ist als gegnerischer Player => Hit
+    bool hit(double swordPos, double hitmarkerPos, int side, Player& p)
+    {
+        if ((swordPos >= hitmarkerPos) && side == 0)
         {
-            Gosu::Font(24).draw_text("You have been slained by xXPu$$ySl4y3rXx", 860, 400, 1, 1, 1);
+            Gosu::Font(24).draw_text("You have been slained by xXPu$$ySl4y3rXx", 860, 300, 1, 1, 1);
+            
+            if (p.lifePoints == 1)
+            {
+                Gosu::Font(24).draw_text("Player xXPu$$ySl4y3rXx has won!", 860, 300, 1, 1, 1);
+            }
+            else
+            {
+                p.lifePoints = p.lifePoints - 1;
+            }
+            return true;
         }
+        else
+        {
+            if (swordPos <= hitmarkerPos && side == 1)
+            {
+                Gosu::Font(24).draw_text("You have been slained by xXD1cKSl4y3rXx", 860, 300, 1, 1, 1);
+
+                if (p.lifePoints == 1)
+                {
+                    Gosu::Font(24).draw_text("Player xXD1cKSl4y3rXx has won!", 860, 300, 1, 1, 1);
+                }
+                else
+                {
+                    p.lifePoints = p.lifePoints - 1;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
 };
@@ -102,6 +144,13 @@ public:
     {
         return swordLength_idle;
     }
+
+    //Methode falls ein Treffer gelandet wurde
+    void startSwordPos(Sword& s1, Sword& s2)
+    {
+        s1.swordPosition = 0;
+        s2.swordPosition = 0;
+    }
 };
 
 class GameWindow : public Gosu::Window
@@ -123,7 +172,14 @@ public:
   
 
     void draw() override {
-        //Gosu::Font(24).draw_text("Nidhogg Fake", 860, 300, 1, 1, 1);
+        
+        
+        std::string text1 = "Player 1 LP:" + std::to_string(player1.lifePoints);
+        Gosu::Font(24).draw_text(text1, double(250), double(400), 1);
+        double textwidth1 =  1575 - Gosu::Font(24).text_width(text1);
+        std::string text2 = "Player 2 LP" + std::to_string(player2.lifePoints);
+        Gosu::Font(24).draw_text(text2, textwidth1, double(400), 0);
+        
         //Player 1 Angriffsposition
         // Kopf
        if (swordPlayer1.extendingSword == true)
@@ -150,7 +206,12 @@ public:
             //Wenn die Schwertposition beim Angriff ungleich der Schwertposition des Gegners ist wird Methode aufgerufen
                 if (swordPlayer1.swordPosition != swordPlayer2.swordPosition)
                 {
-                    player1.hit((player1.getCoordinate_X() + swordPlayer1.get_swordLength_extended()), player2.getCoordinate_hitX());
+                    //Falls Treffer, bringe beide Player wieder in Start Position
+                    if (player1.hit((player1.getCoordinate_X() + swordPlayer1.get_swordLength_extended()), player2.getCoordinate_hitX(), 0, player2))
+                    {
+                        player1.startPos(player1, player2);
+                        swordPlayer1.startSwordPos(swordPlayer1, swordPlayer2);
+                    }
                 }
                 
             }
@@ -169,7 +230,12 @@ public:
                 //Wenn die Schwertposition beim Angriff ungleich der Schwertposition des Gegners ist wird Methode aufgerufen
                 if (swordPlayer1.swordPosition != swordPlayer2.swordPosition)
                 {
-                    player1.hit((player1.getCoordinate_X() + swordPlayer1.get_swordLength_extended()), player2.getCoordinate_hitX());
+                    //Falls Treffer, bringe beide Player wieder in Start Position
+                    if (player1.hit((player1.getCoordinate_X() + swordPlayer1.get_swordLength_extended()), player2.getCoordinate_hitX(), 0, player2))
+                    {
+                        player1.startPos(player1, player2);
+                        swordPlayer1.startSwordPos(swordPlayer1, swordPlayer2);
+                    }
                 }
             }
             else if (swordPlayer1.swordPosition == 0) {
@@ -187,7 +253,12 @@ public:
                 //Wenn die Schwertposition beim Angriff ungleich der Schwertposition des Gegners ist wird Methode aufgerufen
                 if (swordPlayer1.swordPosition != swordPlayer2.swordPosition)
                 {
-                    player1.hit((player1.getCoordinate_X() + swordPlayer1.get_swordLength_extended()), player2.getCoordinate_hitX());
+                    //Falls Treffer, bringe beide Player wieder in Start Position
+                    if (player1.hit((player1.getCoordinate_X() + swordPlayer1.get_swordLength_extended()), player2.getCoordinate_hitX(), 0, player2))
+                    {
+                        player1.startPos(player1, player2);
+                        swordPlayer1.startSwordPos(swordPlayer1, swordPlayer2);
+                    }
                 }
             }
             // linker Arm 
@@ -322,7 +393,12 @@ public:
                //Wenn die Schwertposition beim Angriff ungleich der Schwertposition des Gegners ist wird Methode aufgerufen
                if (swordPlayer2.swordPosition != swordPlayer1.swordPosition)
                {
-                   player2.hit((player2.getCoordinate_X() + swordPlayer2.get_swordLength_extended()), player1.getCoordinate_hitX());
+                   //Falls Treffer, bringe beide Player wieder in Start Position
+                   if (player2.hit((player2.getCoordinate_X() - swordPlayer2.get_swordLength_extended()), player1.getCoordinate_hitX(), 1, player1))
+                   {
+                       player2.startPos(player1, player2);
+                       swordPlayer2.startSwordPos(swordPlayer1, swordPlayer2);
+                   }
                }
            }
            else  if (swordPlayer2.swordPosition == 1) {
@@ -340,7 +416,12 @@ public:
                //Wenn die Schwertposition beim Angriff ungleich der Schwertposition des Gegners ist wird Methode aufgerufen
                if (swordPlayer2.swordPosition != swordPlayer1.swordPosition)
                {
-                   player2.hit((player2.getCoordinate_X() + swordPlayer2.get_swordLength_extended()), player1.getCoordinate_hitX());
+                   //Falls Treffer, bringe beide Player wieder in Start Position
+                   if (player2.hit((player2.getCoordinate_X() - swordPlayer2.get_swordLength_extended()), player1.getCoordinate_hitX(), 1, player1))
+                   {
+                       player2.startPos(player1, player2);
+                       swordPlayer2.startSwordPos(swordPlayer1, swordPlayer2);
+                   }
                }
            }
            else if (swordPlayer2.swordPosition == 0) {
@@ -358,7 +439,12 @@ public:
                //Wenn die Schwertposition beim Angriff ungleich der Schwertposition des Gegners ist wird Methode aufgerufen
                if (swordPlayer2.swordPosition != swordPlayer1.swordPosition)
                {
-                   player2.hit((player2.getCoordinate_X() + swordPlayer2.get_swordLength_extended()), player1.getCoordinate_hitX());
+                   //Falls Treffer, bringe beide Player wieder in Start Position
+                   if (player2.hit((player2.getCoordinate_X() - swordPlayer2.get_swordLength_extended()), player1.getCoordinate_hitX(), 1, player1))
+                   {
+                       player2.startPos(player1, player2);
+                       swordPlayer2.startSwordPos(swordPlayer1, swordPlayer2);
+                   }
                }
            }
 
@@ -449,7 +535,7 @@ public:
        }
     }
 
-
+    //Funktion zum Zeichnen eines Kreises
     void drawCircle(double x, double y, double radius, Gosu::Color color)
     {
         for (int i = 0; i <= 360; i++)
@@ -465,7 +551,7 @@ public:
     }
 
     void update() override {
-        
+
         if (input().down(Gosu::KB_A)) {
             //Einzelne Bewegung
             if (!player1.leftKeyPressed) {
@@ -474,10 +560,10 @@ public:
             }
             //Kontinuierliche Bewegung
             player1.keyHold_l = player1.keyHold_l + 1;
-            
+
             if (player1.keyHold_l >= 30)
             {
-                player1.move(-steps/steps_divider);
+                player1.move(-steps / steps_divider);
             }
         }
         else
@@ -508,14 +594,14 @@ public:
 
         // Steuerung für Spieler 2
 
-       if (input().down(Gosu::KB_LEFT) && (player2.getCoordinate_X() > player1.getCoordinate_X() + 100)) {
-           //Einzelne Bewegung 
-           if (!player2.leftKeyPressed) {
+        if (input().down(Gosu::KB_LEFT) && (player2.getCoordinate_X() > player1.getCoordinate_X() + 100)) {
+            //Einzelne Bewegung 
+            if (!player2.leftKeyPressed) {
                 player2.leftKeyPressed = true;
                 player2.move(-steps);
             }
-           
-           //Kontinuierliche Bewegung
+
+            //Kontinuierliche Bewegung
             player2.keyHold_l = player2.keyHold_l + 1;
 
             if (player2.keyHold_l >= 30)
@@ -529,26 +615,26 @@ public:
             player2.keyHold_l = 0;
         }
 
-       if (input().down(Gosu::KB_RIGHT)) {
-           //Einzelne Bewegung
-           if (!player2.rightKeyPressed) {
-               player2.rightKeyPressed = true;
-               player2.move(steps);
-           }
+        if (input().down(Gosu::KB_RIGHT)) {
+            //Einzelne Bewegung
+            if (!player2.rightKeyPressed) {
+                player2.rightKeyPressed = true;
+                player2.move(steps);
+            }
 
-           //Kontinuierliche Bewegung
-           player2.keyHold_r = player2.keyHold_r + 1;
+            //Kontinuierliche Bewegung
+            player2.keyHold_r = player2.keyHold_r + 1;
 
-           if (player2.keyHold_r >= 30)
-           {
-               player2.move(steps / steps_divider);
-           }
-       }
-       else
-       {
-           player2.rightKeyPressed = false;
-           player2.keyHold_r = 0;
-       }
+            if (player2.keyHold_r >= 30)
+            {
+                player2.move(steps / steps_divider);
+            }
+        }
+        else
+        {
+            player2.rightKeyPressed = false;
+            player2.keyHold_r = 0;
+        }
 
 
         // Bewegung Arm Player 1
@@ -593,9 +679,9 @@ public:
             swordPlayer2.downKeyPressed = false;
         }
 
-        // Player 1 Stich- & Ruheposition
+        // Player 1 Stich- & Ruheposition mit Cooldown (Funktioniert semi gut)
         if (input().down(Gosu::KB_SPACE)) {
-             if (!swordPlayer1.extendingSword && (Gosu::milliseconds() > swordPlayer1.cooldown + 1000)) {
+            if (!swordPlayer1.extendingSword && (Gosu::milliseconds() > swordPlayer1.cooldown + 1000)) {
                 swordPlayer1.cooldown = Gosu::milliseconds();
                 swordPlayer1.extendingSword = true;
             }
@@ -604,7 +690,7 @@ public:
             swordPlayer1.extendingSword = false;
         }
 
-        // Player 2 Stich- & Ruheposition
+        // Player 2 Stich- & Ruheposition mit Cooldown (Funktioniert semi gut)
         if (input().down(Gosu::KB_RETURN)) {
             if (!swordPlayer2.extendingSword && (Gosu::milliseconds() > swordPlayer2.cooldown + 1000)) {
                 swordPlayer2.cooldown = Gosu::milliseconds();
@@ -615,9 +701,6 @@ public:
             swordPlayer2.extendingSword = false;
         }
     }
-
-
-    
 };
 
 
