@@ -91,6 +91,7 @@ public:
             if (p.lifePoints == 1)
             {
                 Gosu::Font(24).draw_text("Player xXPu$$ySl4y3rXx has won!", 860, 300, 1, 1, 1);
+                p.lifePoints = p.lifePoints - 1;
             }
             else
             {
@@ -107,6 +108,7 @@ public:
                 if (p.lifePoints == 1)
                 {
                     Gosu::Font(24).draw_text("Player xXD1cKSl4y3rXx has won!", 860, 300, 1, 1, 1);
+                    p.lifePoints = p.lifePoints - 1;
                 }
                 else
                 {
@@ -169,17 +171,25 @@ public:
 
     int steps = 50;                                 //Dynamische Variable fuer die Schrittweite
     int steps_divider = 5;                          //Dynamische Variable fuer mehrere Schritte
-  
 
     void draw() override {
         
-        
-        std::string text1 = "Player 1 LP:" + std::to_string(player1.lifePoints);
-        Gosu::Font(24).draw_text(text1, double(250), double(400), 1);
-        double textwidth1 =  1575 - Gosu::Font(24).text_width(text1);
-        std::string text2 = "Player 2 LP" + std::to_string(player2.lifePoints);
-        Gosu::Font(24).draw_text(text2, textwidth1, double(400), 0);
-        
+        if (player1.lifePoints > 0 && player2.lifePoints > 0)
+        {
+            Gosu::Font(24).draw_text("Player 1 LP: " + std::to_string(player1.lifePoints) + "                                                                                                                                                                         " + "Player 2 LP: " + std::to_string(player2.lifePoints), 300, 400, 0, 1, 1);
+        }
+        else
+        {
+            if(player1.lifePoints <= 0)
+            {
+                Gosu::Font(72).draw_text_rel("Player 2 has won", 960, 400, 0, 0.5, 1.0, 1, 1, Gosu::Color::YELLOW);
+            }
+            else
+            {
+                Gosu::Font(72).draw_text_rel("Player 1 has won", 960, 400, 0, 0.5, 1.0, 1, 1, Gosu::Color::YELLOW);
+            }
+        }
+
         //Player 1 Angriffsposition
         // Kopf
        if (swordPlayer1.extendingSword == true)
