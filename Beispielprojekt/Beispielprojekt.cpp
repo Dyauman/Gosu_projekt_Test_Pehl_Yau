@@ -158,8 +158,12 @@ public:
 class GameWindow : public Gosu::Window
 {
 public:
+    Gosu::Image bild;
     GameWindow()
-        : Window(1920, 1080) { // Größe des Fensters
+        : Window(1920, 1080)
+        , bild("Hintergrundbild.png")
+    { // Größe des Fensters
+       
         set_caption("Nidhogg Fake");
          
     }
@@ -172,8 +176,17 @@ public:
     int steps = 50;                                 //Dynamische Variable fuer die Schrittweite
     int steps_divider = 5;                          //Dynamische Variable fuer mehrere Schritte
 
+  
+  
+
+
     void draw() override {
-        
+        bild.draw_rot(1920, 1080, 0.0,
+            0.0, // Rotationswinkel in Grad
+            1.0, 1.0 // Position der "Mitte" relativ zu x, y
+        );
+
+
         if (player1.lifePoints > 0 && player2.lifePoints > 0)
         {
             Gosu::Font(24).draw_text("Player 1 LP: " + std::to_string(player1.lifePoints) + "                                                                                                                                                                         " + "Player 2 LP: " + std::to_string(player2.lifePoints), 300, 400, 0, 1, 1);
